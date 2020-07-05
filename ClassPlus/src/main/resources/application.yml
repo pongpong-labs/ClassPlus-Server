@@ -1,0 +1,4 @@
+#mybatis:
+#  type-aliases-package: pnu.classplus.dto
+server:
+  port: 8080
