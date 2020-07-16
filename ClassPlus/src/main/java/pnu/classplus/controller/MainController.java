@@ -11,6 +11,15 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags="MainController Tag")
 @RestController
 public class MainController {
+	
+	@ApiOperation(value="루트", notes="노트")
+	@RequestMapping("/")
+	@ResponseBody
+	public String showRoot() {
+		return "Hello World!";
+	}
+	
+	
 	@ApiOperation(value="메인 페이지", notes="노트")
 	@RequestMapping("/home/main")
 	@ResponseBody
