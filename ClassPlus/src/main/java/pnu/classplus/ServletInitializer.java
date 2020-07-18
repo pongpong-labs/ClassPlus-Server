@@ -12,9 +12,12 @@ public class ServletInitializer extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(ServletInitializer.class);
 	}
+
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ServletInitializer.class, args);
 	}
 
 }
+
+

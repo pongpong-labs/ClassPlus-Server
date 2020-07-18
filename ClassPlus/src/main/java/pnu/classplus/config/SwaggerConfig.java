@@ -31,7 +31,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("test swagger2")
-                .description("swagger2 사용해 봅시다.")
+                .description("swagger2 api docs.")
                 .build();
  
     }

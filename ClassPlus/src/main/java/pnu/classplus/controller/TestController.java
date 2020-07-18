@@ -20,18 +20,18 @@ import pnu.classplus.service.TestService;
 public class TestController {
 	@Autowired
 	TestService articleService;
-	@ApiOperation(value="Å×½ºÆ® ÆäÀÌÁö")
+	@ApiOperation(value="í…ŒìŠ¤íŠ¸ í˜ì´ì§€")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name="param1", value="ÆĞ·¯¹ÌÅÍ1", dataType="int", paramType="query"),
-		@ApiImplicitParam(name="param2", value="ÆĞ·¯¹ÌÅÍ2", dataType="String", paramType="query")
+			@ApiImplicitParam(name="param1", value="íŒ¨ëŸ¬ë¯¸í„°1", dataType="int", paramType="query"),
+			@ApiImplicitParam(name="param2", value="íŒ¨ëŸ¬ë¯¸í„°2", dataType="String", paramType="query")
 	})
 	@RequestMapping("/article/list")
 	@ResponseBody
 	public List showList(Model aModel) {
 		List<Article> list = articleService.getList();
-		
+
 		//aModel.addAttribute("list", list);
-		
+
 		return list;
-	} 
+	}
 }

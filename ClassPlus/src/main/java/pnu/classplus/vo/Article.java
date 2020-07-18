@@ -6,17 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@ApiModel(description="¾ÆÆ¼Å¬ ¸ğµ¨")
+@ApiModel(description="ì•„í‹°í´ ëª¨ë¸")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Article {
-	@ApiModelProperty(value="°Ô½Ã±Û ¹øÈ£", dataType="Integer", required=true, example="1")
+	@ApiModelProperty(value="ê²Œì‹œê¸€ ë²ˆí˜¸", dataType="Integer", required=true, example="1")
 	private long id;
-	@ApiModelProperty(value="µî·Ï ³¯Â¥", example="2019-08-20 12:12:14")
+	@ApiModelProperty(value="ë“±ë¡ ë‚ ì§œ", example="2019-08-20 12:12:14")
 	private String regDate;
-	@ApiModelProperty(value="°Ô½Ã±Û Á¦¸ñ", example="Á¦¸ñÁ¦¸ñ11")
+	@ApiModelProperty(value="ê²Œì‹œê¸€ ì œëª©", example="ì œëª©ì œëª©11")
 	private String title;
-	@ApiModelProperty(value="³»¿ë", example="³»¿ëÀÌ¾ß.")
+	@ApiModelProperty(value="ë‚´ìš©", example="ë‚´ìš©ì´ì•¼.")
 	private String body;
 }
