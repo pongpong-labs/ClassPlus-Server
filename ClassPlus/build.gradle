@@ -26,10 +26,12 @@ repositories {
 	maven { url 'https://repo.spring.io/snapshot' }
 }
 
+apply plugin: 'idea'
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	// springfox-swagger dependencies
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation('io.springfox:springfox-swagger2:2.9.2') {
 			exclude group: 'io.swagger', module: 'swagger-annotations'
 			exclude group: 'io.swagger', module: 'swagger-models'
@@ -38,9 +40,12 @@ dependencies {
 	implementation 'io.swagger:swagger-annotations:1.5.21'
 	implementation 'io.swagger:swagger-models:1.5.21'
 	implementation 'io.springfox:springfox-bean-validators:2.9.2'
-	
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
+	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

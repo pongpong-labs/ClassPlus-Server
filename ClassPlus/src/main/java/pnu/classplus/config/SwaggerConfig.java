@@ -22,7 +22,6 @@ public class SwaggerConfig {
         		.useDefaultResponseMessages(false)
                 .apiInfo(apiInfo())
                 .select()
-                //.apis(RequestHandlerSelectors.any())
                 .apis(RequestHandlerSelectors.basePackage("pnu.classplus.controller"))
                 .paths(PathSelectors.any())
                 .build();
@@ -30,9 +29,8 @@ public class SwaggerConfig {
  
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("test swagger2")
-                .description("swagger2 api docs.")
+                .title("EYEAR Application Server")
+                .description("EYEAR 애플리케이션 API 문서입니다.")
                 .build();
- 
     }
 }
