@@ -6,7 +6,9 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
     generate-ddl: true
-
+  devtools:
+    restart:
+      enabled: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://54.234.126.30:3306/EYEAR?serverTimezone=UTC&characterEncoding=UTF-8
