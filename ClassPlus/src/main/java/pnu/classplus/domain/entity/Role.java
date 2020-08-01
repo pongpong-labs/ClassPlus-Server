@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum Role {
 
-    STUDENT("ROLE_STUDENT"),
-    ASSISTANT("ROLE_ASSISTANT"),
-    PROFESSOR("ROLE_PROFESSOR"),
-    ADMIN("ROLE_ADMIN");
+    ROLE_STUDENT("ROLE_STUDENT"),
+    ROLE_ASSISTANT("ROLE_ASSISTANT"),
+    ROLE_PROFESSOR("ROLE_PROFESSOR"),
+    ROLE_ADMIN("ROLE_ADMIN");
 
     private String text;
 

@@ -14,3 +14,8 @@ spring:
     url: jdbc:mysql://54.234.126.30:3306/EYEAR?serverTimezone=UTC&characterEncoding=UTF-8
     username: depark
     password: pongponglabs
+
+# App Properties
+eyear:
+  app:
+    jwtSecretKey: jwtEyearSecretKey
