@@ -1,26 +1,14 @@
 package pnu.classplus;
 
-public class JwtResponse {
+import lombok.Getter;
+
+@Getter
+public class JwtResponse extends ApiResponse {
     private String token;
     private String type = "Bearer";
 
-    public JwtResponse(String accessToken) {
+    public JwtResponse(int resultCode, String resultMessage, String accessToken) {
+        super(resultCode, resultMessage);
         this.token = accessToken;
-    }
-
-    public String getAccessToken() {
-        return token;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.token = accessToken;
-    }
-
-    public String getTokenType() {
-        return type;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.type = tokenType;
     }
 }
