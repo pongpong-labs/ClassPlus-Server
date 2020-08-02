@@ -1,6 +1,9 @@
 package pnu.classplus.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,8 +20,10 @@ import pnu.classplus.domain.entity.MemberEntity;
 import pnu.classplus.domain.repository.MemberRepository;
 import pnu.classplus.dto.MemberDto;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unchecked")
 @RequiredArgsConstructor
@@ -29,6 +34,8 @@ public class MemberService {
     private final MemberRepository repository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate redisTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
     @Transactional
     public ResponseEntity join(MemberDto memberDto) {
@@ -71,5 +78,16 @@ public class MemberService {
             return new ResponseEntity(new ApiResponse(13, "ID or PW is not correct!"),
                     HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public ResponseEntity logout(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+
+        if (token != null && jwtTokenProvider.validateJwtToken(token)) {
+            long validTime = jwtTokenProvider.getValidTime(token);
+            redisTemplate.opsForValue().set(token, "1", validTime, TimeUnit.MILLISECONDS);
+            logger.info("Logout Called >> Redis Key : {}", token);
+        }
+        return ResponseEntity.ok(new ApiResponse(0, "Logout Successful!"));
     }
 }

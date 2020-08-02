@@ -11,6 +11,10 @@ spring:
     database: mysql
     show-sql: true
     generate-ddl: true
+  redis:
+    host: localhost
+    port: 8081
+    database: 0
   devtools:
     restart:
       enabled: true

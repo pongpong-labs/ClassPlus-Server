@@ -25,6 +25,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthEntryPoint unauthorizedHandler;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**",
+            "/member/**",
+    };
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -58,8 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
                     .authorizeRequests()
-                        .antMatchers("/member/**").permitAll()
-                        .antMatchers("/member2/**").permitAll()
+                        .antMatchers(AUTH_WHITELIST).permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
