@@ -33,17 +33,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation('io.springfox:springfox-swagger2:2.9.2') {
-			exclude group: 'io.swagger', module: 'swagger-annotations'
-			exclude group: 'io.swagger', module: 'swagger-models'
-	}
-	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
-	implementation 'io.swagger:swagger-annotations:1.5.21'
-	implementation 'io.swagger:swagger-models:1.5.21'
 	implementation 'io.springfox:springfox-bean-validators:2.9.2'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
+	compile group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.4.3'
 	compile group: 'redis.clients', name: 'jedis', version: '2.9.1'
 	compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 	compileOnly 'org.projectlombok:lombok'

@@ -26,11 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthEntryPoint unauthorizedHandler;
 
     private static final String[] AUTH_WHITELIST = {
-            "/swagger-resources/**",
-            "/swagger-ui.html",
-            "/v2/api-docs",
-            "/webjars/**",
-            "/member/**",
+        "/v", "/v/**",
+        "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**",
+        "/member/**",
     };
 
     @Bean
