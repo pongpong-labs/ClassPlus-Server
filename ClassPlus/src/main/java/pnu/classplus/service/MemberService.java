@@ -1,6 +1,5 @@
 package pnu.classplus.service;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

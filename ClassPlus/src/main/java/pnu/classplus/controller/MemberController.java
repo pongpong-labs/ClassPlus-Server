@@ -7,7 +7,8 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.*;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,7 +20,7 @@ import pnu.classplus.service.MemberService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-@Tag(name="회원, 로그인 관리 기능")
+@Tag(name="회원 정보 관리 및 로그인 관련 기능")
 @RestController
 @RequestMapping("/member/*")
 public class MemberController {
@@ -63,9 +64,9 @@ public class MemberController {
     @ApiResponses({
         @ApiResponse(responseCode="200", description="Success", content={
             @Content(mediaType=MediaType.APPLICATION_JSON_VALUE,
-                examples=@ExampleObject(value="{'resultCode' : '0', 'resultMessage' : 'Login Successful!', 'type' : 'Bearer',\n" +
+                examples=@ExampleObject(value="{\n 'resultCode' : '0',\n 'resultMessage' : 'Login Successful!',\n 'type' : 'Bearer',\n" +
                     " 'token' : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTU5NjQ2MDk2NSwiZXhwIjoxNTk2NDYyNzY1fQ.TGPpH410WEo2zZvnbDQgy8I2TmCXREMhs3KER4uE7WnodIMIrJJVsv4WHCOiPOEoZ5NIRccwIvCMzARiLgnPuA'\n" +
-                    " 'idx' : '2', 'uid' : 'admin', 'name' : '관리자', 'role' : 'ROLE_ADMIN',\n 'email' : 'admin@pusan.ac.kr', 'univ' : 1, 'dept' : 3" +
+                    " 'idx' : '2',\n 'uid' : 'admin',\n 'name' : '관리자',\n 'role' : 'ROLE_ADMIN',\n 'email' : 'admin@pusan.ac.kr',\n 'univ' : 1,\n 'dept' : 3\n" +
                 "}"))
         }),
         @ApiResponse(responseCode="400", description="Error", content={
