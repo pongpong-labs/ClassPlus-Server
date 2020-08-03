@@ -6,12 +6,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +25,7 @@ public class MemberEntity extends BaseTimeEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 20, updatable = false, nullable = false)
     private String uid;
 
     @Column(length = 100, nullable = false)
@@ -40,24 +41,20 @@ public class MemberEntity extends BaseTimeEntity implements UserDetails {
     @Column(length = 100, nullable = false)
     private String email;
 
-    @Column(length = 300, nullable = false)
-    private String address;
+    @OneToOne
+    @JoinColumn(name = "UNIV_IDX")
+    private UniversityEntity university;
 
-    @Column(length = 20, nullable = false)
-    private String phone;
-
-    @Column(length = 20, nullable = false)
-    private String univ;
-
-    @Column(length = 20, nullable = false)
-    private String dept;
+    @OneToOne
+    @JoinColumn(name = "DEPT_IDX")
+    private DepartmentEntity department;
 
     @Column(nullable = false)
     private boolean enabled;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    private Set<String> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -13,6 +13,7 @@ import pnu.classplus.domain.repository.LectureRepository;
 import pnu.classplus.domain.repository.UniversityRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -103,14 +104,14 @@ public class RelationMappingTest {
         UniversityEntity univ = univRepo.findById(1L).get();
 
         System.out.println(univ.getName() + "의 학과 목록");
-        List<DepartmentEntity> list = univ.getDeptList();
+        Set<DepartmentEntity> list = univ.getDeptList();
         for (DepartmentEntity dept : list) {
             System.out.println(dept.toString());
         }
 
         DepartmentEntity dept = deptRepo.findById(1L).get();
         System.out.println(dept.getName() + "의 강의 목록");
-        List<LectureEntity> lecList = dept.getLecList();
+        Set<LectureEntity> lecList = dept.getLecList();
         for (LectureEntity lec : lecList) {
             System.out.println(lec.toString());
         }

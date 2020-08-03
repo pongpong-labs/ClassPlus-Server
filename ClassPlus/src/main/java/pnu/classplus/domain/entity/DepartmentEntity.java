@@ -5,8 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -29,5 +29,9 @@ public class DepartmentEntity {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
-    private List<LectureEntity> lecList = new ArrayList<LectureEntity>();
+    private Set<LectureEntity> lecList = new HashSet<LectureEntity>();
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "department")
+    private MemberEntity member;
 }

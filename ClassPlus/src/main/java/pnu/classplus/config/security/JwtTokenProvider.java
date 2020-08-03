@@ -3,7 +3,9 @@ package pnu.classplus.config.security;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import pnu.classplus.domain.entity.MemberEntity;
@@ -15,6 +17,9 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Value("${eyear.app.jwtSecretKey}")
     private String secretKey;
@@ -39,6 +44,11 @@ public class JwtTokenProvider {
                 .getBody().getSubject();
     }
 
+    public long getValidTime(String token) {
+        Date expirationDate = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration();
+        return expirationDate.getTime() - System.currentTimeMillis();
+    }
+
     public String resolveToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
 
@@ -51,7 +61,12 @@ public class JwtTokenProvider {
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);
+            boolean isNotExpired = claims.getBody().getExpiration().after(new Date());
+            if (redisTemplate.opsForValue().get(authToken) != null) {
+                logger.info("Invalidated Token -> Already Logged Out");
+                return false;
+            }
             return true;
         } catch (SignatureException e) {
             logger.error("Invalid JWT signature -> Message: {} ", e);

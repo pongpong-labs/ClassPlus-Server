@@ -8,9 +8,15 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+        hbm2ddl:
+          auto: update
     database: mysql
     show-sql: true
     generate-ddl: true
+  redis:
+    host: localhost
+    port: 8081
+    database: 0
   devtools:
     restart:
       enabled: true
@@ -19,6 +25,22 @@ spring:
     url: jdbc:mysql://54.234.126.30:3306/EYEAR?serverTimezone=UTC&characterEncoding=UTF-8
     username: depark
     password: pongponglabs
+
+springdoc:
+  version: '1.0.0'
+  api-docs:
+    path: /api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+  packages-to-scan: pnu.classplus.controller
+  paths-to-match:
+    - /member/**
 
 # App Properties
 eyear:
