@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] AUTH_WHITELIST = {
         "/v", "/v/**",
         "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**",
-        "/member/**",
+        "/member/**", "/info/**"
     };
 
     @Bean

@@ -100,8 +100,13 @@ public class RelationMappingTest {
 
     @Test
     public void testTwoWayMapping() {
-        UniversityEntity univ = univRepo.findById(1L).get();
+        Set<UniversityEntity> univSet = univRepo.findAll();
+        System.out.println("학교 목록");
+        for (UniversityEntity univ : univSet) {
+            System.out.println(univ);
+        }
 
+        UniversityEntity univ = univRepo.findById(1L).get();
         System.out.println(univ.getName() + "의 학과 목록");
         Set<DepartmentEntity> list = univ.getDeptList();
         for (DepartmentEntity dept : list) {

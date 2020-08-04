@@ -1,5 +1,6 @@
 package pnu.classplus.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "UNIVERSITY")
 public class UniversityEntity {
@@ -21,9 +23,12 @@ public class UniversityEntity {
     @Column(length = 40, nullable = false)
     private String name;
 
+    @JsonIgnore
+    @ToString.Exclude
     @OneToMany(mappedBy = "university", fetch = FetchType.EAGER)
     private Set<DepartmentEntity> deptList = new HashSet<DepartmentEntity>();
 
+    @JsonIgnore
     @ToString.Exclude
     @OneToOne(mappedBy = "university")
     private MemberEntity member;
