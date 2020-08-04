@@ -12,7 +12,6 @@ import pnu.classplus.domain.repository.DepartmentRepository;
 import pnu.classplus.domain.repository.LectureRepository;
 import pnu.classplus.domain.repository.UniversityRepository;
 
-import java.util.List;
 import java.util.Set;
 
 @RunWith(SpringRunner.class)

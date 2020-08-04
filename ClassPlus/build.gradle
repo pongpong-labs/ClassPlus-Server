@@ -40,6 +40,7 @@ dependencies {
 	compile group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.4.3'
 	compile group: 'redis.clients', name: 'jedis', version: '2.9.1'
 	compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+	compile group: 'org.apache.commons', name: 'commons-email', version: '1.5'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
