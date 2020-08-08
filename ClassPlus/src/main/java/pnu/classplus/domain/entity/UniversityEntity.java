@@ -33,14 +33,4 @@ public class UniversityEntity {
     @OneToOne(mappedBy = "university")
     private MemberEntity member;
 
-    @Override
-    public boolean equals(Object obj) {
-        UniversityEntity other;
-        if (obj instanceof UniversityEntity) {
-            other = (UniversityEntity) obj;
-            return (idx.equals(other.idx)) && (name.equals(other.name));
-        } else {
-            return false;
-        }
-    }
 }
