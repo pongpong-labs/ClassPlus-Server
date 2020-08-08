@@ -60,9 +60,9 @@ public class InfoService {
         DepartmentEntity dept = optDept.get();
         QLectureEntity lecture = lectureEntity;
         List<LectureEntity> data = queryFactory.select(Projections.bean(LectureEntity.class, lecture.idx, lecture.name))
-            .where(lecture.department.eq(dept))
-            .from(lecture)
-            .fetch();
+                                            .where(lecture.department.eq(dept))
+                                            .from(lecture)
+                                            .fetch();
         return new ResponseEntity(new DataResponse(0, "response successful", data),
             HttpStatus.OK);
     }

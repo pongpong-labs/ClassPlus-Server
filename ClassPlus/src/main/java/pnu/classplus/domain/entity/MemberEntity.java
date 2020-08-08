@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class MemberEntity extends BaseTimeEntity implements UserDetails {
 
     @Id
+    @Column(name="MEMBER_IDX")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
