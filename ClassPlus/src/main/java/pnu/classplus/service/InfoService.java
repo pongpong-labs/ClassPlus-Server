@@ -2,15 +2,26 @@ package pnu.classplus.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pnu.classplus.ApiResponse;
+import pnu.classplus.domain.entity.DepartmentEntity;
+import pnu.classplus.domain.entity.QDepartmentEntity;
 import pnu.classplus.domain.entity.UniversityEntity;
+import pnu.classplus.domain.repository.DepartmentRepository;
 import pnu.classplus.domain.repository.UniversityRepository;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+
+import static pnu.classplus.domain.entity.QDepartmentEntity.departmentEntity;
 
 @SuppressWarnings("unchecked")
 @RequiredArgsConstructor
@@ -18,22 +29,39 @@ import java.util.Set;
 public class InfoService {
 
     private final UniversityRepository univRepo;
+    private final DepartmentRepository deptRepo;
+    private final JPAQueryFactory queryFactory;
 
     public ResponseEntity getUniversityInfo() {
-        Set<UniversityEntity> univSet = univRepo.findAll();
+        Set<UniversityEntity> data = univRepo.findAll();
 
-        ObjectMapper mapper = new ObjectMapper();
-        String resultJSON;
-        try {
-            resultJSON = mapper.writeValueAsString(univSet).replace("\"[", "[").replace("]\"", "]")
-                .replace("\\\"{", "{").replace("}\\\"", "}")
-                .replace("\\\\\\\"", "\"");
-        } catch (JsonProcessingException e) {
-            return new ResponseEntity(new ApiResponse(11, "error"),
+        return new ResponseEntity(new DataResponse(0, "response successful", data),
+            HttpStatus.OK);
+    }
+
+    public ResponseEntity getDepartmentInfo(final long univCode) {
+        Optional<UniversityEntity> optUniv = univRepo.findById(univCode);
+        if (!optUniv.isPresent()) {
+            return new ResponseEntity(new ApiResponse(31, "invalid univ_idx parameter"),
                 HttpStatus.BAD_REQUEST);
         }
+        UniversityEntity univ = optUniv.get();
+        QDepartmentEntity dept = departmentEntity;
+        List<DepartmentEntity> data = queryFactory.select(Projections.bean(DepartmentEntity.class, dept.idx, dept.name))
+                                                .where(dept.university.eq(univ))
+                                                .from(dept)
+                                                .fetch();
+        return new ResponseEntity(new DataResponse(0, "response successful", data),
+                HttpStatus.OK);
+    }
+}
 
-        return new ResponseEntity(new ApiResponse(11, resultJSON),
-            HttpStatus.OK);
+@Getter
+class DataResponse extends ApiResponse {
+    private Object data;
+
+    public DataResponse(int resultCode, String resultMessage, Object data) {
+        super(resultCode, resultMessage);
+        this.data = data;
     }
 }

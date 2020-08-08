@@ -26,10 +26,21 @@ public class UniversityEntity {
     @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "university", fetch = FetchType.EAGER)
-    private Set<DepartmentEntity> deptList = new HashSet<DepartmentEntity>();
+    private Set<DepartmentEntity> deptSet = new HashSet<DepartmentEntity>();
 
     @JsonIgnore
     @ToString.Exclude
     @OneToOne(mappedBy = "university")
     private MemberEntity member;
+
+    @Override
+    public boolean equals(Object obj) {
+        UniversityEntity other;
+        if (obj instanceof UniversityEntity) {
+            other = (UniversityEntity) obj;
+            return (idx.equals(other.idx)) && (name.equals(other.name));
+        } else {
+            return false;
+        }
+    }
 }

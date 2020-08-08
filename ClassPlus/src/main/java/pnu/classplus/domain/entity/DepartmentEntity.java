@@ -29,7 +29,7 @@ public class DepartmentEntity {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
-    private Set<LectureEntity> lecList = new HashSet<LectureEntity>();
+    private Set<LectureEntity> lecSet = new HashSet<LectureEntity>();
 
     @ToString.Exclude
     @OneToOne(mappedBy = "department")

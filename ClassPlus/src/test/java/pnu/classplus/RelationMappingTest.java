@@ -1,5 +1,6 @@
 package pnu.classplus;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,10 @@ import pnu.classplus.domain.repository.DepartmentRepository;
 import pnu.classplus.domain.repository.LectureRepository;
 import pnu.classplus.domain.repository.UniversityRepository;
 
+import java.util.List;
 import java.util.Set;
+
+import static pnu.classplus.domain.entity.QDepartmentEntity.departmentEntity;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,9 +30,11 @@ public class RelationMappingTest {
     @Autowired
     private LectureRepository lecRepo;
 
-
+    @Autowired
+    private JPAQueryFactory queryFactory;
+    @Test
     public void testManyToOneInsert() {
-        String s[] = {"정보컴푸터공학부", "기계공학부", "의생명융합공학부", "전기공학과"};
+        String s[] = {"정보컴퓨터공학부", "기계공학부", "의생명융합공학부", "전기공학과"};
         String d[][] = {
                 {"운영체제", "알고리즘", "컴퓨터구조", "C프로그래밍"},
                 {"일반물리학", "정역학", "고체역학", "열역학"},
@@ -98,7 +104,6 @@ public class RelationMappingTest {
         }
     }
 
-    @Test
     public void testTwoWayMapping() {
         Set<UniversityEntity> univSet = univRepo.findAll();
         System.out.println("학교 목록");
@@ -108,30 +113,38 @@ public class RelationMappingTest {
 
         UniversityEntity univ = univRepo.findById(1L).get();
         System.out.println(univ.getName() + "의 학과 목록");
-        Set<DepartmentEntity> list = univ.getDeptList();
+        Set<DepartmentEntity> list = univ.getDeptSet();
         for (DepartmentEntity dept : list) {
             System.out.println(dept.toString());
         }
 
         DepartmentEntity dept = deptRepo.findById(1L).get();
         System.out.println(dept.getName() + "의 강의 목록");
-        Set<LectureEntity> lecList = dept.getLecList();
+        Set<LectureEntity> lecList = dept.getLecSet();
         for (LectureEntity lec : lecList) {
             System.out.println(lec.toString());
         }
 
         dept = deptRepo.findById(4L).get();
         System.out.println(dept.getName() + "의 강의 목록");
-        lecList = dept.getLecList();
+        lecList = dept.getLecSet();
         for (LectureEntity lec : lecList) {
             System.out.println(lec.toString());
         }
 
         dept = deptRepo.findById(7L).get();
         System.out.println(dept.getName() + "의 강의 목록");
-        lecList = dept.getLecList();
+        lecList = dept.getLecSet();
         for (LectureEntity lec : lecList) {
             System.out.println(lec.toString());
         }
+    }
+
+    public void testQuertDsl() {
+        UniversityEntity univ = univRepo.findById(1L).get();
+        List<DepartmentEntity> res = queryFactory.selectFrom(departmentEntity)
+                                                .where(departmentEntity.university.eq(univ))
+                                                .fetch();
+        System.out.println(res);
     }
 }
