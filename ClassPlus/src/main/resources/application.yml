@@ -42,6 +42,8 @@ springdoc:
   paths-to-match:
     - /member/**
     - /info/**
+    - /admin2/**
+    - /student/**
 
 # App Properties
 eyear:

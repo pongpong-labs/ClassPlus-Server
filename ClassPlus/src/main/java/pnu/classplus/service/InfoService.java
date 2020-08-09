@@ -2,12 +2,12 @@ package pnu.classplus.service;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pnu.classplus.ApiResponse;
+import pnu.classplus.DataResponse;
 import pnu.classplus.domain.entity.*;
 import pnu.classplus.domain.repository.DepartmentRepository;
 import pnu.classplus.domain.repository.UniversityRepository;
@@ -65,15 +65,5 @@ public class InfoService {
                                             .fetch();
         return new ResponseEntity(new DataResponse(0, "response successful", data),
             HttpStatus.OK);
-    }
-}
-
-@Getter
-class DataResponse extends ApiResponse {
-    private Object data;
-
-    public DataResponse(int resultCode, String resultMessage, Object data) {
-        super(resultCode, resultMessage);
-        this.data = data;
     }
 }

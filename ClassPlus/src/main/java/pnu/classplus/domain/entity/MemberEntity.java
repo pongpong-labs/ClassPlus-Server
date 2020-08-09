@@ -50,11 +50,21 @@ public class MemberEntity extends BaseTimeEntity implements UserDetails {
     @JoinColumn(name = "DEPT_IDX")
     private DepartmentEntity department;
 
+    @Builder.Default
+    @ToString.Exclude
+    @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
+    private Set<LectureDetailsEntity> lectureSet = new HashSet<LectureDetailsEntity>();
+
+    @Builder.Default
+    @ToString.Exclude
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
+    private Set<LectureRegisteredEntity> lectureRegisteredSet = new HashSet<LectureRegisteredEntity>();
+
     @Column(nullable = false)
     private boolean enabled;
 
-    @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
 
     @Override

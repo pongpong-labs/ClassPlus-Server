@@ -1,6 +1,5 @@
 package pnu.classplus.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,12 +22,10 @@ public class UniversityEntity {
     @Column(length = 40, nullable = false)
     private String name;
 
-    @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "university", fetch = FetchType.EAGER)
     private Set<DepartmentEntity> deptSet = new HashSet<DepartmentEntity>();
 
-    @JsonIgnore
     @ToString.Exclude
     @OneToOne(mappedBy = "university")
     private MemberEntity member;

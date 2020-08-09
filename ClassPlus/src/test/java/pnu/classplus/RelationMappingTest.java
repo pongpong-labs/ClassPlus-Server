@@ -5,14 +5,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
-import pnu.classplus.domain.entity.DepartmentEntity;
-import pnu.classplus.domain.entity.LectureEntity;
-import pnu.classplus.domain.entity.UniversityEntity;
+import pnu.classplus.domain.entity.*;
 import pnu.classplus.domain.repository.DepartmentRepository;
 import pnu.classplus.domain.repository.LectureRepository;
+import pnu.classplus.domain.repository.MemberRepository;
 import pnu.classplus.domain.repository.UniversityRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -31,8 +32,14 @@ public class RelationMappingTest {
     private LectureRepository lecRepo;
 
     @Autowired
+    private MemberRepository memberRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private JPAQueryFactory queryFactory;
-    @Test
+
     public void testManyToOneInsert() {
         String s[] = {"정보컴퓨터공학부", "기계공학부", "의생명융합공학부", "전기공학과"};
         String d[][] = {
@@ -139,12 +146,71 @@ public class RelationMappingTest {
             System.out.println(lec.toString());
         }
     }
-
-    public void testQuertDsl() {
+    @Test
+    public void insertMember() {
         UniversityEntity univ = univRepo.findById(1L).get();
-        List<DepartmentEntity> res = queryFactory.selectFrom(departmentEntity)
-                                                .where(departmentEntity.university.eq(univ))
-                                                .fetch();
-        System.out.println(res);
+        DepartmentEntity dept;
+
+        dept = deptRepo.findById(1L).get();
+        memberRepo.save(MemberEntity.builder()
+            .uid("admin")
+            .password(passwordEncoder.encode("admin!@"))
+            .role(Role.ROLE_ADMIN)
+            .name("관리자")
+            .email("admin@eyear.kr")
+            .university(univ)
+            .department(dept)
+            .enabled(true)
+            .roles(Collections.singleton(Role.ROLE_ADMIN.toString()))
+            .build());
+
+        long stDeptCode[] = {1, 1, 1, 1, 2, 2, 2};
+        String stId[] = {"st_depark", "st_msw", "st_hwangmk", "st_kimdb", "st_yeoyh", "st_choisw", "st_jeonhs"};
+        String stName[] = {"박대언", "문성욱", "황미경", "김대박", "여윤호", "최시원", "전현성"};
+        String stEmail[] = {
+            "parkde@pusan.ac.kr", "moonse@pusan.ac.kr", "hwangmk@pusan.ac.kr", "daebak@naver.com",
+            "yyh@daum.net", "choisw@navy.mil.kr", "junhs@sajik.hs.kr"
+        };
+
+        for (int i = 0; i < stDeptCode.length; ++i) {
+            dept = deptRepo.findById(stDeptCode[i]).get();
+            memberRepo.save(MemberEntity.builder()
+                .uid(stId[i])
+                .password(passwordEncoder.encode("pongponglabs!"))
+                .role(Role.ROLE_STUDENT)
+                .name(stName[i])
+                .email(stEmail[i])
+                .university(univ)
+                .department(dept)
+                .enabled(true)
+                .roles(Collections.singleton(Role.ROLE_STUDENT.toString()))
+                .build());
+        }
+
+        long pfDeptCode[] = {1, 1, 1, 1, 2, 2, 2};
+        String pfId[] = {"pf_johk", "pf_hschoi", "pf_jwmoon", "pf_kwonhc", "pf_kimsw", "pf_choiym", "pf_jspark"};
+        String pfName[] = {"조환규", "채흥석", "문정욱", "권혁철", "김시완", "최용민", "박준석"};
+        String pfEmail[] = {
+            "johk@pusan.ac.kr", "hschoi@pusan.ac.kr", "jwmoon@pusan.ac.kr", "kwonhc@seoul.ac.kr",
+            "kimsw@daum.net", "choiym@pusan.ac.kr", "jspark@naver.com"
+        };
+        for (int i = 0; i < stDeptCode.length; ++i) {
+            dept = deptRepo.findById(pfDeptCode[i]).get();
+            memberRepo.save(MemberEntity.builder()
+                .uid(pfId[i])
+                .password(passwordEncoder.encode("pongponglabs!"))
+                .role(Role.ROLE_PROFESSOR)
+                .name(pfName[i])
+                .email(pfEmail[i])
+                .university(univ)
+                .department(dept)
+                .enabled(true)
+                .roles(Collections.singleton(Role.ROLE_PROFESSOR.toString()))
+                .build());
+        }
+    }
+
+    public void testQueryDsl() {
+
     }
 }
