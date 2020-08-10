@@ -1,5 +1,6 @@
 package pnu.classplus.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,6 +28,7 @@ public class LectureEntity {
     @JoinColumn(name = "dept_idx", nullable = false)
     private DepartmentEntity department;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ToString.Exclude
     @OneToMany(mappedBy = "lecture", fetch = FetchType.EAGER)
     private Set<LectureDetailsEntity> lectureSet = new HashSet<LectureDetailsEntity>();

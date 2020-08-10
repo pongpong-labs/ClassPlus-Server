@@ -1,5 +1,6 @@
 package pnu.classplus.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,6 +30,7 @@ public class MemberEntity extends BaseTimeEntity implements UserDetails {
     @Column(length = 20, updatable = false, nullable = false)
     private String uid;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(length = 100, nullable = false)
     private String password;
 
@@ -42,6 +44,7 @@ public class MemberEntity extends BaseTimeEntity implements UserDetails {
     @Column(length = 100, nullable = false)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToOne
     @JoinColumn(name = "UNIV_IDX")
     private UniversityEntity university;
@@ -50,11 +53,13 @@ public class MemberEntity extends BaseTimeEntity implements UserDetails {
     @JoinColumn(name = "DEPT_IDX")
     private DepartmentEntity department;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
     private Set<LectureDetailsEntity> lectureSet = new HashSet<LectureDetailsEntity>();
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)

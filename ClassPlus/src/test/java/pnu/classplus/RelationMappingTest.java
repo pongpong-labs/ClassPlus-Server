@@ -14,10 +14,7 @@ import pnu.classplus.domain.repository.MemberRepository;
 import pnu.classplus.domain.repository.UniversityRepository;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-
-import static pnu.classplus.domain.entity.QDepartmentEntity.departmentEntity;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

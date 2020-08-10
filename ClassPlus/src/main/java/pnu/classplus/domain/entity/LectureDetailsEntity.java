@@ -1,5 +1,6 @@
 package pnu.classplus.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -46,6 +47,7 @@ public class LectureDetailsEntity {
     @JoinColumn(name = "LEC_IDX", nullable = false)
     private LectureEntity lecture;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "lectureDetails", fetch = FetchType.EAGER)
