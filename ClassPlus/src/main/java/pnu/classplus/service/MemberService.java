@@ -2,6 +2,7 @@ package pnu.classplus.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,10 +27,7 @@ import pnu.classplus.dto.MemberDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unchecked")
@@ -150,9 +148,9 @@ public class MemberService {
     }
 
     public ResponseEntity checkPw(MemberDto memberDto) {
-        final String id = memberDto.getUid();
+        final long idx = memberDto.getIdx();
         final String pw = memberDto.getPassword();
-        Optional<MemberEntity> optMember = memberRepo.findByUid(id);
+        Optional<MemberEntity> optMember = memberRepo.findByIdx(idx);
         MemberEntity member = optMember.get();
         if (!passwordEncoder.matches(pw, member.getPassword())) {
             return new ResponseEntity(new ApiResponse(13, "incorrect password"),
@@ -162,8 +160,8 @@ public class MemberService {
             HttpStatus.OK);
     }
 
-    public ResponseEntity changePw(final String id, final String newPassword) {
-        Optional<MemberEntity> optMember = memberRepo.findByUid(id);
+    public ResponseEntity changePw(final long idx, final String newPassword) {
+        Optional<MemberEntity> optMember = memberRepo.findByIdx(idx);
         MemberEntity member = optMember.get();
 
         member.setPassword(passwordEncoder.encode(newPassword));
@@ -171,6 +169,81 @@ public class MemberService {
 
         return new ResponseEntity(new ApiResponse(0, "password change completed"),
             HttpStatus.OK);
+    }
+
+    public ResponseEntity initPw(final String uid, final String name, final String email) {
+        Set<MemberEntity> memberSet = memberRepo.findByUidContainingAndNameContainingAndEmailContaining(uid, name, email);
+
+        if (memberSet.size() == 0) {
+            return new ResponseEntity(new ApiResponse(22, "no member"),
+                HttpStatus.OK);
+        }
+        Iterator<MemberEntity> it = memberSet.iterator();
+        MemberEntity member = it.next();
+
+        final String newPassword = getRandomPassword(12);
+        member.setPassword(passwordEncoder.encode(newPassword));
+        memberRepo.save(member);
+
+        if (sendInitPwEmail(member, newPassword)) {
+            return new ResponseEntity(new ApiResponse(0, "pw initialized and send email success"),
+                HttpStatus.OK);
+        }
+
+        return new ResponseEntity(new ApiResponse(23, "send email failed"),
+            HttpStatus.OK);
+    }
+
+    public static String getRandomPassword(int len) {
+
+        char[] charSet = new char[] {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            '@', '#', '$', '%', '^', '&', '!', '*'
+        };
+        StringBuilder sb = new StringBuilder(len);
+        Random random = new Random();
+        for (int i = 0; i < len; i++) {
+            sb.append(charSet[random.nextInt(charSet.length)]);
+        }
+        return sb.toString();
+    }
+
+    private static boolean sendInitPwEmail(MemberEntity member, String pw) {
+
+        final String charSet = "utf-8";
+        final String hostSMTP = "smtp.naver.com";
+        final String hostSMTPid = "eyear_pongponglabs";
+        final String hostSMTPpwd = "pongponglabs!";
+
+        final String fromEmail = "eyear_pongponglabs@naver.com";
+        final String fromName = "EYEAR";
+        final String subject = "EYEAR App 계정 패스워드 초기화 정보입니다.";
+        String msg = "<div style='border: 1px solid black; padding: 10px; font-family: verdana;'>";
+        msg += "<h2>안녕하세요. <span style='color: blue;'>" + member.getName() + "</span>님.</h2>";
+        msg += "<p>초기화된 비밀번호를 전송해 드립니다. 비밀번호를 변경하여 사용하세요.</p>";
+        msg += "<p>임시 비밀번호 : <span style='color: blue;'>" + pw + "</span></p></div>";
+
+        try {
+            HtmlEmail email = new HtmlEmail();
+            email.setDebug(true);
+            email.setCharset(charSet);
+            email.setSSLOnConnect(true);
+            email.setHostName(hostSMTP);
+            email.setSmtpPort(587);
+
+            email.setAuthentication(hostSMTPid, hostSMTPpwd);
+            email.setStartTLSEnabled(true);
+            email.addTo(member.getEmail(), member.getName(), charSet);
+            email.setFrom(fromEmail, fromName, charSet);
+            email.setSubject(subject);
+            email.setHtmlMsg(msg);
+            email.send();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
 

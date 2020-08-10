@@ -14,15 +14,15 @@ spring:
     show-sql: true
     generate-ddl: true
   redis:
-    host: localhost
-    port: 8081
+    host: pongponglabs.iptime.org
+    port: 6379
     database: 0
   devtools:
     restart:
       enabled: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://54.234.126.30:3306/EYEAR?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://pongponglabs.iptime.org:3306/EYEAR?serverTimezone=UTC&characterEncoding=UTF-8
     username: depark
     password: pongponglabs
 
@@ -41,6 +41,9 @@ springdoc:
   packages-to-scan: pnu.classplus.controller
   paths-to-match:
     - /member/**
+    - /info/**
+    - /admin2/**
+    - /student/**
 
 # App Properties
 eyear:

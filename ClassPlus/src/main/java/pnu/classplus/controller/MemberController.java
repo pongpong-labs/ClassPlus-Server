@@ -28,7 +28,7 @@ public class MemberController {
     private MemberService service;
 
     @Parameters({
-        @Parameter(name="id", description="아이디", in=ParameterIn.QUERY, schema=@Schema(type="string", maxLength=20), required=true),
+        @Parameter(name="uid", description="아이디", in=ParameterIn.QUERY, schema=@Schema(type="string", maxLength=20), required=true),
         @Parameter(name="password", description="비밀번호", in=ParameterIn.QUERY, schema=@Schema(type="string"), required=true),
         @Parameter(name="role", description="회원 유형", in=ParameterIn.QUERY, schema=@Schema(type="string"), required=true, example="'ROLE_STUDENT' or 'ROLE_ADMIN' or 'ROLE_ASSISTANT' or 'ROLE_PROFESSOR'"),
         @Parameter(name="name", description="이름", in=ParameterIn.QUERY, schema=@Schema(type="string", maxLength=30), required=true),
@@ -119,6 +119,7 @@ public class MemberController {
     @GetMapping("/check/email")
     public ResponseEntity checkEmailOverlap(@RequestParam("email") final String email) { return service.checkEmailOverlap(email); }
 
+
     @Parameters({
         @Parameter(name="name", description="이름", in=ParameterIn.QUERY, schema=@Schema(type="string", maxLength=30), required=true),
         @Parameter(name="email", description="이메일", in=ParameterIn.QUERY, schema=@Schema(type="string", maxLength=100), required=true),
@@ -139,7 +140,7 @@ public class MemberController {
 
 
     @Parameters({
-        @Parameter(name="uid", description="아이디", in=ParameterIn.QUERY, schema=@Schema(type="string", maxLength=20), required=true),
+        @Parameter(name="idx", description="멤버 코드", in=ParameterIn.QUERY, schema=@Schema(type="integer"), required=true),
         @Parameter(name="password", description="비밀번호", in=ParameterIn.QUERY, schema=@Schema(type="string"), required=true),
     })
     @Operation(summary="비밀번호 확인", description="잘못된 아이디값 요청 시 예외 처리되어 있지 않습니다. 주의하세요.")
@@ -158,7 +159,7 @@ public class MemberController {
 
 
     @Parameters({
-        @Parameter(name="uid", description="아이디", in=ParameterIn.QUERY, schema=@Schema(type="string", maxLength=20), required=true),
+        @Parameter(name="idx", description="멤버 코드", in=ParameterIn.QUERY, schema=@Schema(type="integer"), required=true),
         @Parameter(name="new_pw", description="새 비밀번호", in=ParameterIn.QUERY, schema=@Schema(type="string"), required=true)
     })
     @Operation(summary="비밀번호 변경")
@@ -169,8 +170,33 @@ public class MemberController {
     })
     @PostMapping("/change/pw")
     public ResponseEntity changePw(@Parameter(hidden=true) @RequestBody Map<String, Object> param) {
-        final String id = (String) param.get("uid");
+        final long idx = (int) param.get("idx");
         final String newPassword = (String) param.get("new_pw");
-        return service.changePw(id, newPassword);
+        return service.changePw(idx, newPassword);
     }
+
+
+    @Parameters({
+        @Parameter(name="uid", description="아이디", in=ParameterIn.QUERY, schema=@Schema(type="string", maxLength=20), required=true),
+        @Parameter(name="name", description="이름", in=ParameterIn.QUERY, schema=@Schema(type="string", maxLength=30), required=true),
+        @Parameter(name="email", description="이메일", in=ParameterIn.QUERY, schema=@Schema(type="string", maxLength=100), required=true),
+    })
+    @Operation(summary="비밀번호 찾기")
+    @ApiResponses({
+        @ApiResponse(responseCode="200", description="Success", content={
+            @Content(mediaType=MediaType.APPLICATION_JSON_VALUE,
+                examples=@ExampleObject(
+                    value="{'resultCode' : '0', 'resultMessage' : 'pw initialized and send email success'}\n" +
+                        "{'resultCode' : '22', 'resultMessage' : 'no member'}\n" +
+                        "{'resultCode' : '23', 'resultMessage' : 'send email failed'}"))
+        })
+    })
+    @PostMapping("/init/pw")
+    public ResponseEntity initPw(@Parameter(hidden=true) @RequestBody Map<String, Object> param) {
+        final String uid = (String) param.get("uid");
+        final String name = (String) param.get("name");
+        final String email = (String) param.get("email");
+        return service.initPw(uid, name, email);
+    }
+
 }

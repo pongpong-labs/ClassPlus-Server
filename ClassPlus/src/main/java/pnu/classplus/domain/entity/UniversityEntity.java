@@ -10,6 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "UNIVERSITY")
 public class UniversityEntity {
@@ -21,10 +22,12 @@ public class UniversityEntity {
     @Column(length = 40, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "university", fetch = FetchType.EAGER)
-    private Set<DepartmentEntity> deptList = new HashSet<DepartmentEntity>();
+    @ToString.Exclude
+    @OneToMany(mappedBy = "university")
+    private Set<DepartmentEntity> deptSet = new HashSet<DepartmentEntity>();
 
     @ToString.Exclude
     @OneToOne(mappedBy = "university")
     private MemberEntity member;
+
 }

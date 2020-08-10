@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.16.BUILD-SNAPSHOT'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 	id 'java'
 	id 'war'
 }
@@ -40,10 +41,38 @@ dependencies {
 	compile group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.4.3'
 	compile group: 'redis.clients', name: 'jedis', version: '2.9.1'
 	compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+	compile group: 'org.apache.commons', name: 'commons-email', version: '1.5'
+	compile group: 'com.querydsl', name: 'querydsl-jpa', version: '4.2.1'
+	compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.2.1'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+def querydslSrcDir = 'src/main/generated'
+
+querydsl {
+	library = 'com.querydsl:querydsl-apt'
+	jpa = true
+	querydslSourcesDir = querydslSrcDir
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src/main/java', querydslSrcDir]
+		}
+	}
 }
