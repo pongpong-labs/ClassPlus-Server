@@ -28,8 +28,8 @@ public class LectureScriptEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private int week;
 
-    @Column(nullable = false)
-    private int num_per_week;
+    @Column(name = "num_per_week", nullable = false)
+    private int numPerWeek;
 
     @Column(length = 400, nullable = false)
     private String summary;
@@ -37,6 +37,14 @@ public class LectureScriptEntity extends BaseTimeEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(columnDefinition = "TEXT", nullable = false)
     private String script;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false)
+    private int accuracy_score;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false)
+    private int speed_score;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(length = 5000, nullable = false)

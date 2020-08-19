@@ -158,6 +158,16 @@ public class LectureService {
 
     public ResponseEntity addLectureScript(HttpServletRequest request, LectureScriptDto lectureScriptDto) {
         String uid = tokenProvider.getUserIdFromJwtToken(tokenProvider.resolveToken(request));
+        final int accuracyScore = lectureScriptDto.getAccuracy_score();
+        final int speedScore = lectureScriptDto.getSpeed_score();
+        if (!(accuracyScore >= 1 && accuracyScore <= 5)) {
+            return new ResponseEntity(new ApiResponse(43, "invalid accuracy_score"),
+                HttpStatus.BAD_REQUEST);
+        }
+        if (!(speedScore >= 1 && speedScore <=5)) {
+            return new ResponseEntity(new ApiResponse(44, "invalid speed_score"),
+                HttpStatus.BAD_REQUEST);
+        }
 
         Optional<MemberEntity> optMemberStudent = memberRepo.findByUid(uid);
         if (!optMemberStudent.isPresent()) {
@@ -183,19 +193,37 @@ public class LectureService {
             return new ResponseEntity(new ApiResponse(36, "student not registered to this lecture"),
                 HttpStatus.BAD_REQUEST);
         }
-        /*
-         * take_count 증가 위한 쿼리 추가 예정
-         */
-        /*
-         * num_per_week가 cnt 넘지는 않았는지 예외 처리 (중요). week, num_per_week 중복 체크
-         */
+
+        final int week = lectureScriptDto.getWeek();
+        final int num_per_week = lectureScriptDto.getNum_per_week();
+
+        if (!(week >= 1 && week <= lectureDetails.getWeek())) {
+            return new ResponseEntity(new ApiResponse(45, "invalid week parameter"),
+                HttpStatus.BAD_REQUEST);
+        }
+        if (!(num_per_week >= 1 && num_per_week <= lectureDetails.getCount_per_week())) {
+            return new ResponseEntity(new ApiResponse(46, "invalid num_per_week parameter"),
+                HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<LectureScriptEntity> optLectureScript = lectureScriptRepo.findByLectureRegisteredAndWeekAndNumPerWeek(lectureRegistered, week, num_per_week);
+        if (optLectureScript.isPresent()) {
+            return new ResponseEntity(new ApiResponse(47, "duplicated week or num_per_week parameter"),
+                HttpStatus.BAD_REQUEST);
+        }
+
+        int take_count = lectureRegistered.getTake_count();
+        lectureRegistered.setTake_count(++take_count);
+        lectureRegisteredRepo.save(lectureRegistered);
 
         lectureScriptRepo.save(LectureScriptEntity.builder()
                         .lectureRegistered(lectureRegistered)
-                        .week(lectureScriptDto.getWeek())
-                        .num_per_week(lectureScriptDto.getNum_per_week())
+                        .week(week)
+                        .numPerWeek(num_per_week)
                         .summary(lectureScriptDto.getSummary())
                         .script(lectureScriptDto.getScript())
+                        .accuracy_score(accuracyScore)
+                        .speed_score(speedScore)
                         .feedback(lectureScriptDto.getFeedback())
                         .build());
 
@@ -308,13 +336,14 @@ public class LectureService {
             .from(lectureScriptEntity)
             .where(lectureScriptEntity.lectureRegistered.eq(lectureRegistered)
                 .and(lectureScriptEntity.week.eq(week))
-                .and(lectureScriptEntity.num_per_week.eq(num_per_week)))
+                .and(lectureScriptEntity.numPerWeek.eq(num_per_week)))
             .fetch();
 
         if (lectureScriptEntities.isEmpty()) {
             return new ResponseEntity(new ApiResponse(38, "invalid week or num_per_week parameter (script not saved in database)"),
                 HttpStatus.BAD_REQUEST);
         }
+
         Map<String, Object> responseData = new HashMap<String, Object>();
         responseData.put("week", week);
         responseData.put("num_per_week", num_per_week);
@@ -359,7 +388,7 @@ public class LectureService {
             .selectFrom(lectureScriptEntity)
             .where(lectureScriptEntity.lectureRegistered.eq(lectureRegistered)
                 .and(lectureScriptEntity.week.eq(lectureScriptDto.getWeek()))
-                .and(lectureScriptEntity.num_per_week.eq(lectureScriptDto.getNum_per_week())))
+                .and(lectureScriptEntity.numPerWeek.eq(lectureScriptDto.getNum_per_week())))
             .fetch();
 
         if (lectureScriptEntities.isEmpty()) {

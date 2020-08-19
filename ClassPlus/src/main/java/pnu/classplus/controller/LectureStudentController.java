@@ -82,6 +82,8 @@ public class LectureStudentController {
         @Parameter(name="num_per_week", description="강의 회차 (1주 1회차, 1주 2회차, 2주 1회차...)", in=ParameterIn.QUERY, schema=@Schema(type="integer"), required=true, example="2 (1주 2회차 수업일 때)"),
         @Parameter(name="summary", description="강의 개요 (400byte)", in=ParameterIn.QUERY, schema=@Schema(type="string"), required=true),
         @Parameter(name="script", description="강의 스크립트 (64Kbyte)", in=ParameterIn.QUERY, schema=@Schema(type="string"), required=true),
+        @Parameter(name="accuracy_score", description="정확도 점수 (1 ~ 5)", in=ParameterIn.QUERY, schema=@Schema(type="integer"), required=true),
+        @Parameter(name="speed_score", description="자막 구현속도 점수 (1 ~ 5)", in=ParameterIn.QUERY, schema=@Schema(type="integer"), required=true),
         @Parameter(name="feedback", description="피드백 (5000byte)", in=ParameterIn.QUERY, schema=@Schema(type="string"), required=true)
     })
     @Operation(summary="강의 스크립트 추가", description = "week, num_per_week 중복 데이터 예외 처리 안 되 있으므로 유의하세요. (에러 코드 38 미처리)")
@@ -95,7 +97,14 @@ public class LectureStudentController {
                     value="{'resultCode' : '32', 'resultMessage' : 'invalid lecture_details code'}\n" +
                         "{'resultCode' : '33', 'resultMessage' : 'invalid member (session invalid)'}\n" +
                         "{'resultCode' : '36', 'resultMessage' : 'student not registered this lecture'}\n" +
-                        "{'resultCode' : '38', 'resultMessage' : 'invalid week or num_per_week parameter (duplicated in database)'}"))
+                        "{'resultCode' : '38', 'resultMessage' : 'invalid week or num_per_week parameter (duplicated in database)'}\n" +
+                        "{'resultCode' : '36', 'resultMessage' : 'student not registered this lecture'}\n" +
+                        "{'resultCode' : '43', 'resultMessage' : 'invalid accuracy_score'}\n" +
+                        "{'resultCode' : '44', 'resultMessage' : 'invalid speed_score'}\n" +
+                        "{'resultCode' : '45', 'resultMessage' : 'invalid week parameter'}\n" +
+                        "{'resultCode' : '46', 'resultMessage' : 'invalid num_per_week parameter'}\n" +
+                        "{'resultCode' : '47', 'resultMessage' : 'duplicated week or num_per_week parameter'}\n"
+                ))
         })
     })
     @PostMapping("/script")

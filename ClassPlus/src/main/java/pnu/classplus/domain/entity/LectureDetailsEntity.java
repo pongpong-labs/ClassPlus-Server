@@ -39,7 +39,7 @@ public class LectureDetailsEntity {
 
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "MEMBER_IDX", nullable = false)
+    @JoinColumn(name = "PROFESSOR_MEM_IDX", nullable = false)
     private MemberEntity professor;
 
     @ToString.Exclude

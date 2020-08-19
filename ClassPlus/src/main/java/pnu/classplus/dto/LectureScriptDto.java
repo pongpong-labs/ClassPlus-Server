@@ -15,5 +15,7 @@ public class LectureScriptDto {
     private int num_per_week;
     private String summary;
     private String script;
+    private int speed_score;
+    private int accuracy_score;
     private String feedback;
 }

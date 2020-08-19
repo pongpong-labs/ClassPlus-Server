@@ -44,6 +44,7 @@ springdoc:
     - /info/**
     - /admin2/**
     - /student/**
+    - /message/**
 
 # App Properties
 eyear:

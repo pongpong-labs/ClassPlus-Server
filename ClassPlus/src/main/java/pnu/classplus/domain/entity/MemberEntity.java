@@ -65,6 +65,18 @@ public class MemberEntity extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
     private Set<LectureRegisteredEntity> lectureRegisteredSet = new HashSet<LectureRegisteredEntity>();
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Builder.Default
+    @ToString.Exclude
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
+    private Set<MessageEntity> messageSenderSet = new HashSet<MessageEntity>();
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Builder.Default
+    @ToString.Exclude
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
+    private Set<MessageEntity> messageReceiverSet = new HashSet<MessageEntity>();
+
     @Column(nullable = false)
     private boolean enabled;
 
