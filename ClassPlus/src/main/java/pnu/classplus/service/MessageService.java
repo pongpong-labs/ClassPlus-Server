@@ -34,7 +34,7 @@ public class MessageService {
 
         Optional<MemberEntity> optSender = memberRepo.findByUid(uid);
         if (!optSender.isPresent()) {
-            return new ResponseEntity(new ApiResponse(33, "invalid member (session invalid)"),
+            return new ResponseEntity(new ApiResponse(33, "invalid sender (session invalid)"),
                 HttpStatus.BAD_REQUEST);
         }
 
@@ -42,14 +42,14 @@ public class MessageService {
 
         Optional<MemberEntity> optReceiver = memberRepo.findById(dto.getReceiver_mem_idx());
         if (!optReceiver.isPresent()) {
-            return new ResponseEntity(new ApiResponse(33, "invalid member (session invalid)"),
+            return new ResponseEntity(new ApiResponse(40, "invalid receiver"),
                 HttpStatus.BAD_REQUEST);
         }
 
         MemberEntity receiver = optReceiver.get();
 
         if (sender.equals(receiver)) {
-            return new ResponseEntity(new ApiResponse(99, "sender equals to receiver"),
+            return new ResponseEntity(new ApiResponse(41, "sender equals to receiver"),
                 HttpStatus.BAD_REQUEST);
         }
 
@@ -68,7 +68,7 @@ public class MessageService {
 
         Optional<MemberEntity> optReceiver = memberRepo.findByUid(uid);
         if (!optReceiver.isPresent()) {
-            return new ResponseEntity(new ApiResponse(33, "invalid member (session invalid)"),
+            return new ResponseEntity(new ApiResponse(33, "invalid sender (session invalid)"),
                 HttpStatus.BAD_REQUEST);
         }
 
@@ -79,8 +79,8 @@ public class MessageService {
                                                             .fetch();
 
         if (messageEntityList.isEmpty()) {
-            return new ResponseEntity(new ApiResponse(99, "No message"),
-                HttpStatus.OK);
+            return new ResponseEntity(new ApiResponse(42, "No message"),
+                HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity(new DataResponse(0, "Message get Successful", messageEntityList),
