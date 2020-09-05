@@ -14,7 +14,7 @@ spring:
     show-sql: true
     generate-ddl: true
   redis:
-    host: pongponglabs.iptime.org
+    host: pongponglabs.kr
     port: 6379
     database: 0
   devtools:
@@ -22,7 +22,7 @@ spring:
       enabled: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://pongponglabs.iptime.org:3306/EYEAR?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://pongponglabs.kr:3306/EYEAR?serverTimezone=UTC&characterEncoding=UTF-8
     username: depark
     password: pongponglabs
 
